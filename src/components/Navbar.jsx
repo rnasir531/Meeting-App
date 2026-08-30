@@ -2,16 +2,11 @@ import { Link, useLocation } from "react-router-dom";
 import React from "react";
 import { UserButton, useUser } from "@clerk/react";
 import { AsteriskIcon, HistoryIcon, LayoutDashboardIcon } from "lucide-react";
+import { dummyUser } from "../assets/asset";
 
 const Navbar = () => {
-  const { isSignedIn, user, isLoaded } = useUser();
-  const location = useLocation();
-
-  // Loading state guard
-  if (!isLoaded) return null;
-
-  // Temporary fallback for local UI testing if not signed in with Clerk yet
-  const authenticated = isSignedIn ?? true;
+  const { isSignedIn, user } = {user : dummyUser ,isSignedIn:true}
+  const location = useLocation()
 
   const userName =
     user?.fullName ||
@@ -20,17 +15,19 @@ const Navbar = () => {
     "User";
 
   return (
-    <header className="w-full max-w-[1220px] mx-auto bg-white/90 backdrop-blur xl:rounded-b-xl sticky top-0 z-40 px-6 py-4 flex items-center justify-between border border-slate-200">
+
+    <header className="w-full max-w-[1220px] mx-auto bg-white/90 backdrop-blur xl:rounded-b-xl sticky 
+        top-0 z-40 px-6 py-4 flex items-center justify-between border border-slate-200">
       <div className="flex items-center gap-6">
         <Link to="/dashboard" className="flex items-center gap-1.5">
-          <img src="/logo.svg" alt="Meetup Logo" className="w-6 h-6" />
+          <img src="/logo.svg" alt="Meetup Logo" className="size-6.5" />
           <span className="text-2xl font-medium tracking-tight text-slate-900 flex items-center">
-            Meetup<span className="text-blue-600">.</span>
+            Meetup <span className="text-primary">.</span>
           </span>
         </Link>
 
-        {authenticated && (
-          <nav className="flex items-center gap-1.5 ml-2">
+        {isSignedIn && (
+          <nav className="hidden md:flex items-center gap-1.5 ml-2">
             <Link
               to="/dashboard"
               className={`px-3.5 py-1.5 rounded-full text-xs font-medium transition-all flex items-center gap-1.5 ${
@@ -70,8 +67,15 @@ const Navbar = () => {
         )}
       </div>
 
-      {authenticated && (
+      {isSignedIn && (
         <div className="flex items-center gap-4">
+          <Link
+            to="/sessions"
+            className="md:hidden text-xs font-medium text-slate-600 hover:text-primary flex items-center gap-1"
+          >
+            <HistoryIcon className="w-4 h-4" />
+            Sessions
+          </Link>
           <span className="font-medium hidden sm:inline tracking-wide text-sm text-slate-700">
             Welcome, {userName}
           </span>
